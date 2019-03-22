@@ -30,4 +30,3 @@ Here we expecting an object with `launch` method, which includes both `id` and `
 ## Tools
 
 GraphQL service creates with a `schema` and `resolvers` which return data for the schema. All that serves by `ApolloServer()`.
-
