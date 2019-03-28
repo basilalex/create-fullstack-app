@@ -1,0 +1,10 @@
+{
+  "name": "client",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Oleksandr Bazylevskyi <bazylevskyioleksandr@gmail.com>",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
