@@ -5,11 +5,15 @@ import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import resolvers from './resolvers';
 import typeDefs from './schema.graphql';
+import { db } from './config';
 
 export const createApiServer = args => {
   const app = express();
   const schema = makeExecutableSchema({ typeDefs, resolvers });
-  const apolloServer = new ApolloServer({ schema });
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req }) => ({ ...req, db })
+  });
 
   app.use(cors({
     credentials: true,
@@ -17,10 +21,10 @@ export const createApiServer = args => {
   }));
 
   app.use(express.json());
-  // app.use(express.static(path.join(process.cwd(), '../client/dist')));
+  // app.use(express.static(path.join(__dirname, '../client/dist')));
 
   // app.get('*', (req, res) => {
-  //   res.sendFile('index.html', { root: path.join(process.cwd(), '../client/dist') });
+  //   res.sendFile('index.html', { root: path.join(__dirname, '../client/dist') });
   // });
 
   apolloServer.applyMiddleware({ app, path: '/graphql' });

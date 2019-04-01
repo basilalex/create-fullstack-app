@@ -1,7 +1,11 @@
+scalar Date
+
 type Item {
   id: ID!
   title: String!
   description: String!
+  createdAt: Date
+  updatedAt: Date
 }
 
 type Mutation {

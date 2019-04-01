@@ -1,5 +1,5 @@
 export const Mutation = {
-  createItem() {
+  createItem(obj, args, context, info) {
     return {};
   }
 };

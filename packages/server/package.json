@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode development --progress --watch",
     "build": "webpack --config webpack.config.js --progress",
-    "serve": "node dist/server.js"
+    "serve": "node dist/server.js",
+    "migrate": "npx knex migrate:latest --env production --knexfile ./knexfile.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.4.8",
@@ -16,7 +17,8 @@
     "express": "^4.16.4",
     "graphql-playground-html": "^1.6.13",
     "graphql-playground-middleware-express": "^1.7.12",
-    "graphql-tools": "^4.0.4"
+    "graphql-tools": "^4.0.4",
+    "mysql2": "^1.6.5"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
