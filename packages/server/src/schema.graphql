@@ -1,0 +1,13 @@
+type Item {
+  id: ID!
+  title: String!
+  description: String!
+}
+
+type Mutation {
+  createItem(title: String, description: String): Item!
+}
+
+type Query {
+  item(id: ID!): Item
+}
