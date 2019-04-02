@@ -3,21 +3,20 @@ import cors from 'cors';
 import express from 'express';
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
-import resolvers from './resolvers';
 import typeDefs from './schema.graphql';
-import { db } from './config';
 
-export const createApiServer = args => {
+export const createApiServer = appCtx => {
+  const { resolvers, DAO, env: { WEBSITE_URL, PORT }} = appCtx;
   const app = express();
   const schema = makeExecutableSchema({ typeDefs, resolvers });
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }) => ({ ...req, db })
+    context: ({ req }) => ({ ...req, DAO })
   });
 
   app.use(cors({
     credentials: true,
-    origin: process.env.WEBSITE_URL
+    origin: WEBSITE_URL
   }));
 
   app.use(express.json());
@@ -35,9 +34,9 @@ export const createApiServer = args => {
     return res.send('Bye Bye World');
   });
 
-  app.listen(process.env.PORT || 8080, () => {
-    console.log(`The application is running on port ${process.env.PORT || 8080}`);
+  app.listen(PORT || 8080, () => {
+    console.log(`The application is running on port ${PORT || 8080}`);
   });
 
-  return { ...args, app };
+  return { ...appCtx, app };
 };

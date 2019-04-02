@@ -1,5 +1,5 @@
 export const Mutation = {
-  createItem(obj, args, context, info) {
-    return {};
+  async createItem(obj, { title, description }, { DAO }, info) {
+    return DAO.createItem(title, description);
   }
 };

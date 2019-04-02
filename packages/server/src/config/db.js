@@ -1,14 +1,20 @@
 import knex from 'knex';
 
-const connection = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  charset: 'utf8'
-};
+export const connectDb = appCtx => {
+  const { env: { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE } } = appCtx;
 
-export const db = knex({
-  client: 'mysql2',
-  connection
-});
+  const connection = {
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_DATABASE,
+    charset: 'utf8'
+  };
+
+  const db = knex({
+    client: 'mysql2',
+    connection
+  });
+
+  return { ...appCtx, db };
+};

@@ -13,5 +13,6 @@ type Mutation {
 }
 
 type Query {
-  item(id: ID!): Item
+  item(id: ID!): Item,
+  items: [Item]!
 }

@@ -1,12 +1,16 @@
-import path from 'path';
-import dotenv from 'dotenv';
+import { getEnv, pipe } from './utils';
+import { createConfig } from './config';
+import { createProviders } from './providers';
+import { getResolvers } from './resolvers';
 import { createApiServer } from './apiServer';
-import { pipe } from './utils';
 
-const env = dotenv.config({ path: path.join(process.cwd() + '/.env.development') });
+const env = getEnv();
 
 const startApp = pipe(
+  createConfig,
+  createProviders,
+  getResolvers,
   createApiServer
 );
 
-startApp();
+startApp({ env });

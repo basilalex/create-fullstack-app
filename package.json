@@ -2,6 +2,11 @@
   "name": "root",
   "private": true,
   "license": "ISC",
+  "scripts": {
+    "build": "lerna run build",
+    "serve": "lerna run serve",
+    "migrate": "lerna run migrate"
+  },
   "devDependencies": {
     "lerna": "^3.13.1"
   }
