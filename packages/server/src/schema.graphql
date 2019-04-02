@@ -1,7 +1,7 @@
 scalar Date
 
 type Item {
-  id: ID!
+  id: Int!
   title: String!
   description: String!
   createdAt: Date
@@ -13,6 +13,6 @@ type Mutation {
 }
 
 type Query {
-  item(id: ID!): Item,
+  item(id: Int!): Item,
   items: [Item]!
 }
