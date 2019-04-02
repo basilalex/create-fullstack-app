@@ -27,9 +27,8 @@ export const createApiServer = appCtx => {
 
   apolloServer.applyMiddleware({ app, path: '/graphql' });
 
-  app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
-
   if (process.env.NODE_ENV === 'development') {
+    app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
     app.get('*', (req, res) => res.redirect(WEBSITE_URL));
   }
 
