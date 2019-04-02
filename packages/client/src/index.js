@@ -1,12 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { pipe } from './utils';
+import { createProviders } from './providers';
+import { getUI } from './UI';
+import { getComponents } from './components';
+import { getRoutes } from './routes';
+import { renderApp } from './root';
+import { configureSW } from './SW';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const startApp = pipe(
+  createProviders,
+  getUI,
+  getComponents,
+  getRoutes,
+  renderApp,
+  configureSW
+);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+startApp({});
