@@ -20,19 +20,18 @@ export const createApiServer = appCtx => {
   }));
 
   app.use(express.json());
-  // app.use(express.static(path.join(__dirname, '../client/dist')));
 
-  // app.get('*', (req, res) => {
-  //   res.sendFile('index.html', { root: path.join(__dirname, '../client/dist') });
-  // });
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(process.cwd(), '../client/build')));    
+  }
 
   apolloServer.applyMiddleware({ app, path: '/graphql' });
 
   app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
 
-  app.get('*', (req, res) => {
-    return res.send('Bye Bye World');
-  });
+  if (process.env.NODE_ENV === 'development') {
+    app.get('*', (req, res) => res.redirect(WEBSITE_URL));
+  }
 
   app.listen(PORT || 8080, () => {
     console.log(`The application is running on port ${PORT || 8080}`);
