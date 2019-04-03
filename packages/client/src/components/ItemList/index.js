@@ -38,11 +38,11 @@ export class ItemList extends Component {
             const { items } = cache.readQuery({ query: GET_ITEMS });
             cache.writeQuery({ query: GET_ITEMS, data: { items: [ ...items, createItem ]}});
           }}>
-          {(createItem, { loading }) => {
-            const onClick = () => createItem({ variables: { title }});
-            return <button disabled={loading} onClick={onClick}>Add</button>;
-          }
-        }
+          {(createItem, { loading }) => (
+            <button disabled={loading} onClick={() => createItem({ variables: { title }})}>
+              Add
+            </button>
+          )}
         </Mutation>
         <Query query={GET_ITEMS}>
           {this.handleQuery}
