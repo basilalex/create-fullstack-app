@@ -9,7 +9,7 @@ type Item {
 }
 
 type Mutation {
-  createItem(title: String, description: String): Item!
+  createItem(title: String!): Item!
 }
 
 type Query {

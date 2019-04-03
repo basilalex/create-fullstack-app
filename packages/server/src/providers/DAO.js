@@ -9,8 +9,8 @@ export const createDAO = appCtx => {
     async queryItems() {
       return camelizeKeys(await db('item').select());
     },
-    async createItem(title, description) {
-      const [id] = await db('item').insert({ title, description });
+    async createItem(title) {
+      const [id] = await db('item').insert({ title });
       return this.queryItem(id);
     }
   };
