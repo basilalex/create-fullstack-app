@@ -11,6 +11,10 @@
     "migrate": "npx knex migrate:latest --env production --knexfile ./knexfile.js"
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link-http": "^1.5.14",
+    "apollo-server": "^2.4.8",
     "apollo-server-express": "^2.4.8",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
@@ -18,6 +22,7 @@
     "graphql-playground-html": "^1.6.13",
     "graphql-playground-middleware-express": "^1.7.12",
     "graphql-tools": "^4.0.4",
+    "http": "^0.0.0",
     "humps": "^2.0.1",
     "knex": "^0.16.3",
     "mysql2": "^1.6.5"

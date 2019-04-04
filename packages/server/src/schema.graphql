@@ -16,3 +16,7 @@ type Query {
   item(id: Int!): Item,
   items: [Item]!
 }
+
+type Subscription {
+  itemAdded: Item
+}
