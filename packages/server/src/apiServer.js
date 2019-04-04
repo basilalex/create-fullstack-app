@@ -1,16 +1,19 @@
 import path from 'path';
 import cors from 'cors';
+import { createServer } from 'http';
 import express from 'express';
-import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import typeDefs from './schema.graphql';
 
 export const createApiServer = appCtx => {
   const { resolvers, DAO, env: { WEBSITE_URL, PORT }} = appCtx;
   const app = express();
-  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const ws = createServer(app);
   const apolloServer = new ApolloServer({
-    schema,
+    typeDefs,
+    resolvers,
+    subscriptions: '/subscriptions',
     context: ({ req }) => ({ ...req, DAO })
   });
 
@@ -26,14 +29,18 @@ export const createApiServer = appCtx => {
   }
 
   apolloServer.applyMiddleware({ app, path: '/graphql' });
+  apolloServer.installSubscriptionHandlers(ws);
 
   if (process.env.NODE_ENV === 'development') {
-    app.get('/playground', expressPlayground({ endpoint: '/graphql' }));
-    app.get('*', (req, res) => res.redirect(WEBSITE_URL));
+    app.get('/playground', expressPlayground({
+      endpoint: '/graphql',
+      subscriptionsEndpoint: '/subscriptions'
+    }));
   }
 
-  app.listen(PORT || 8080, () => {
-    console.log(`The application is running on port ${PORT || 8080}`);
+  ws.listen(PORT || 8080, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT || 8080}${apolloServer.graphqlPath}`)
+    console.log(`🚀 Subscriptions ready at ws://localhost:${PORT || 8080}${apolloServer.subscriptionsPath}`)
   });
 
   return { ...appCtx, app };
