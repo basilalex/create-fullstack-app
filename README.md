@@ -1,4 +1,18 @@
-# How to create and debug GraphQL Apollo Queries, Mutations, and Subscriptions
+## `Root`
+
+### Features:
+- Client
+- Server
+
+### Scripts
+How to run:
+
+```
+yarn build
+yarn serve
+```
+
+# `How to create and debug GraphQL Apollo Queries, Mutations, and Subscriptions`
 
 1. GraphQL
 2. Architecture
