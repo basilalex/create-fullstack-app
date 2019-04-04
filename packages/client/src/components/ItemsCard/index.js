@@ -1,9 +1,8 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { ItemList } from '..';
+import { ItemList, AddItemButton } from '..';
 import { GET_ITEMS } from './query';
 import { ITEMS_SUBSCRIPTION } from './subscription';
-import { AddItemButton } from './AddItemButton';
 
 const { platform, product } = window.navigator;
 const title = `${platform} - ${product}`;
