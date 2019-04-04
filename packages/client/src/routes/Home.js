@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ItemList } from '../components';
+import { ItemsCard } from '../components';
 
 class Home extends PureComponent {
 
@@ -7,8 +7,7 @@ class Home extends PureComponent {
     return (
       <div>
         This is Home!.
-
-        <ItemList />
+        <ItemsCard />
       </div>
     );
   }
