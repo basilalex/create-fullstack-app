@@ -5,8 +5,8 @@ import { GET_ITEMS } from './query';
 import { ITEMS_SUBSCRIPTION } from './subscription';
 import { AddItemButton } from './AddItemButton';
 
-const { platform, product, connection } = window.navigator;
-const title = `${platform} - ${product} - ${connection.effectiveType}`;
+const { platform, product } = window.navigator;
+const title = `${platform} - ${product}`;
 
 const handleQuery = ({ subscribeToMore, ...rest }) => (
   <ItemList
@@ -14,17 +14,12 @@ const handleQuery = ({ subscribeToMore, ...rest }) => (
     subscribeToNewItems={() => subscribeToMore({
       document: ITEMS_SUBSCRIPTION,
       updateQuery: (prev, { subscriptionData }) => {
-        console.log('========== prev: ', prev);
-
         if (!subscriptionData.data) {
           return prev;
         }
 
         const { itemAdded } = subscriptionData.data;
-
-        console.log('========== itemAdded: ', itemAdded);
-
-        return { ...prev, itemAdded };
+        return { items: [ ...prev.items, itemAdded ] };
       }
     })}
   />
