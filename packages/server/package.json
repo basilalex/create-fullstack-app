@@ -22,6 +22,7 @@
     "graphql-playground-html": "^1.6.13",
     "graphql-playground-middleware-express": "^1.7.12",
     "graphql-tools": "^4.0.4",
+    "helmet": "^3.16.0",
     "http": "^0.0.0",
     "humps": "^2.0.1",
     "knex": "^0.16.3",
