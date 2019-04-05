@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ItemsCard } from '../components';
+import { ItemsCard } from '../../components';
 
 class Home extends PureComponent {
 
