@@ -28,7 +28,7 @@ export const createApiServer = appCtx => {
     optionsSuccessStatus: 200,
     methods: 'GET,POST',
   }));
-32 
+
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(process.cwd(), '../client/build')));    
   }
