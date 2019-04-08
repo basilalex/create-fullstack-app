@@ -18,8 +18,12 @@ export const createApiServer = appCtx => {
   });
 
   app.use(helmet());
-  app.use(helmet.contentSecurityPolicy(cspConfig));
-  app.use(helmet.featurePolicy(featureConfig));
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(helmet.contentSecurityPolicy(cspConfig));
+    app.use(helmet.featurePolicy(featureConfig));
+  }
+
   app.use(express.json());
 
   app.use(cors({
