@@ -9,18 +9,11 @@ How to run:
 
 ```
 yarn build
+yarn migrate
 yarn serve
 ```
 
 # `How to create and debug GraphQL Apollo Queries, Mutations, and Subscriptions`
-
-- GraphQL
-- Architecture
-- Fetch data with Query components
-- Update data with Mutation components
-- Real-time data updates with GraphQL subscriptions
-- Apollo Client Devtools
-- Summary
 
 ## GraphQL
 
@@ -45,11 +38,49 @@ In this section, I’ll walk you through the architecture that was implemented -
 
 In the setup, you have a single web-server that implements the GraphQL specification. When a query arrives at the GraphQL server, the server reads the query’s payload and fetches the required information from the database. This is called resolving the query. It then constructs the response object as described in the official specification and returns it to the client.
 
-<img src='https://imgur.com/cRE6oeb.png' style='display: block; margin: 0 auto'>
+<img src='https://i.imgur.com/z9VKnHs.png' style='display: block; margin: 0 auto'>
 
 It’s important to note that GraphQL is actually transport-layer agnostic. This means it can potentially be used with any available network protocol. So, it is potentially possible to implement a GraphQL server based on TCP, WebSockets, etc.
 
 GraphQL also doesn’t care about the database or the format that is used to store the data. You could use a SQL database like AWS Aurora or a NoSQL database like MongoDB.
+
+## Apollo Server
+
+[Apollo Server](https://www.apollographql.com/docs/apollo-server) implements a spec-compliant GraphQL server which can be queried from any GraphQL client, enabling:
+
+<img src='https://raw.githubusercontent.com/apollographql/apollo-server/apollo-server%402.4.8/docs/source/images/index-diagram.svg?sanitize=true' style='display: block; margin: 0 auto'>
+
+- An easy start, so front-end and back-end developers can start fetching data quickly.
+- Incremental adoption, allowing advanced features to be added when they're needed.
+- Universal compatibility with any data source, any build tool and any GraphQL client.
+- Production readiness, and what you build in development works great in production.
+
+Server creations as simple as that:
+```javascript
+import express from 'express';
+import { createServer } from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import expressPlayground from 'graphql-playground-middleware-express';
+import typeDefs from './schema.graphql';
+
+// ...
+
+const app = express();
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  subscriptions: '/subscriptions',
+  context: ({ req }) => ({ ...req, DAO })
+});
+
+apolloServer.applyMiddleware({ app, path: '/graphql' });
+
+const ws = createServer(app);
+apolloServer.installSubscriptionHandlers(ws);
+
+ws.listen(PORT || 8080);
+```
+The code above creates a GraphQL server, which is ready to handle `queries`, `mutations` and `subscriptions`.
 
 ## Fetch data with Query components
 
@@ -124,18 +155,61 @@ const handleQuery = ({ subscribeToMore, ...rest }) => (
 
 In this example, the `handleQuery` function subscribes on new items creation event. As argument it receives an object with `subscribeToMore` function, which takes a config with a GraphQL subscription string and `updateQuery` method, which will update the cache by returning the object.
 
-## Apollo Client Devtools
+## Debug
+
+### Apollo Client Devtools
 
 The [Apollo Client Devtools](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) is a Chrome extension which appear as an "Apollo" tab in your Chrome inspector, along side the "Elements" and "Console" tabs.
 
-GraphiQL: Send queries to your server through the Apollo network interface, or query the Apollo cache to see what data is loaded.
+There are a couple great features:
+- GraphiQL: Send queries to your server through the Apollo network interface, or query the Apollo cache to see what data is loaded.
+- Normalized store inspector: Visualize your GraphQL store the way Apollo Client sees it, and search by field names or values.
+- Watched query inspector: View active queries and variables, and locate the associated UI components.
 
-<img src='https://raw.githubusercontent.com/apollographql/apollo-client/apollo-client%402.5.1/docs/source/assets/devtools/apollo-client-devtools/apollo-devtools-graphiql.png' style='display: block; margin: 0 auto'>
+### Logging
 
-Normalized store inspector: Visualize your GraphQL store the way Apollo Client sees it, and search by field names or values.
+If you just want to log something quick in order to debug something in your server environment, then you can provide `formatError` and `formatResponse` callback functions to the `ApolloServer` config as in the example.
 
-<img src='https://raw.githubusercontent.com/apollographql/apollo-client/apollo-client%402.5.1/docs/source/assets/devtools/apollo-client-devtools/apollo-devtools-store.png' style='display: block; margin: 0 auto'>
+```javascript
+const logger = log => {
+  console.log(log);
+  return log;
+};
 
-Watched query inspector: View active queries and variables, and locate the associated UI components.
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  subscriptions: '/subscriptions',
+  context: ({ req }) => ({ ...req, DAO }),
+  formatError: logger,
+  formatResponse: logger
+});
+```
 
-<img src='https://raw.githubusercontent.com/apollographql/apollo-client/apollo-client%402.5.1/docs/source/assets/devtools/apollo-client-devtools/apollo-devtools-queries.png' style='display: block; margin: 0 auto'>
+For more advanced cases, Apollo Server provides [an experimental api](https://www.apollographql.com/docs/apollo-server/features/metrics) that accepts an array of `graphql-extensions` to the extensions field. These extensions receive a variety of lifecycle calls for each phase of a GraphQL request and can keep state, such as the request headers.
+
+```javascript
+import { LoggingExtension } from './logging';
+
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  subscriptions: '/subscriptions',
+  context: ({ req }) => ({ ...req, DAO }),
+  extensions: [() => new LoggingExtension()]
+});
+```
+
+### GraphQL Playground
+[GraphQL Playground](https://github.com/prisma/graphql-playground) is a graphical, interactive, in-browser GraphQL IDE, created by [Prisma](https://www.prisma.io) and based on GraphiQL.
+
+<img src='https://camo.githubusercontent.com/1a26385e3543849c561cfafd0c25de791a635570/68747470733a2f2f692e696d6775722e636f6d2f41453557364f572e706e67' style='display: block; margin: 0 auto'>
+
+GraphQL Playground uses components of [GraphiQL](https://github.com/graphql/graphiql) under the hood but is meant as a more powerful GraphQL IDE enabling better (local) development workflows. Compared to GraphiQL, the GraphQL Playground ships with the following additional features:
+
+- Interactive, multi-column schema documentation
+- Automatic schema reloading
+- Support for GraphQL Subscriptions
+- Query history
+- Configuration of HTTP headers
+- Tabs
