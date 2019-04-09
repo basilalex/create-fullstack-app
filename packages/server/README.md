@@ -5,7 +5,7 @@
 - Apollo-GraphQl
 - Apollo-GraphQl-Subscriptions
 - GraphQl-Playground
-- Knex MySQL
+- Knex SQLite
 - Webpack bundling
 
 ## Scripts
