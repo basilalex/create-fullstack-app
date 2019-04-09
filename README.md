@@ -86,7 +86,7 @@ The code above creates a GraphQL server, which is ready to handle `queries`, `mu
 
 To make a query you need to import `Query` component which expects at least two props:
 - a GraphQL query string passed to the `query` prop
-- render prop function that returns a React element
+- render prop function that returns a React component
 
 ```jsx
 import { Query } from 'react-apollo';
@@ -102,6 +102,17 @@ export const ItemsCard = () => (
 ```
 
 In `handleQuery` function we can use `loading`, `error`, and `data` properties to determine which UI elements we should return depending on the state of our query.
+
+And here is an example of the server-side resolver:
+
+```javascript
+export const Query = {
+  // ...
+  async items(parent, args, { DAO }, info) {
+    return DAO.queryItems();
+  }
+};
+```
 
 ## Update data with Mutation components
 
@@ -123,8 +134,17 @@ import { CREATE_ITEM } from './mutation';
 ```
 
 The first argument of the render prop function is the mutate function, which you specified in the GraphQL mutation tag and call to tell Apollo Client that you'd like to trigger a mutation. 
-
 The second argument to the render prop function is an object, which contains all information like mutation result, `called` and `loading` booleans, `error` object.
+
+And here is an example of the server-side resolver:
+
+```javascript
+export const Mutation = {
+  async createItem(obj, { title }, { DAO }, info) {
+    return DAO.createItem(title);
+  }
+};
+```
 
 ## Real-time data updating with GraphQL subscriptions
 
@@ -154,6 +174,36 @@ const handleQuery = ({ subscribeToMore, ...rest }) => (
 ```
 
 In this example, the `handleQuery` function subscribes on new items creation event. As argument it receives an object with `subscribeToMore` function, which takes a config with a GraphQL subscription string and `updateQuery` method, which will update the cache by returning the object.
+
+And here is an example of the server-side resolver:
+
+```javascript
+// pubSub.js
+import { PubSub } from 'apollo-server';
+
+export const ITEM_ADDED = 'ITEM_ADDED';
+export const pubsub = new PubSub();
+
+// subscription.js
+import { pubsub, ITEM_ADDED } from './pubSub';
+
+export const Subscription = {
+  itemAdded: { subscribe: () => pubsub.asyncIterator([ ITEM_ADDED ])},
+};
+
+// mutation.js
+import { pubsub, ITEM_ADDED } from './pubSub';
+
+export const Mutation = {
+  async createItem(obj, { title }, { DAO }, info) {
+    const item = await DAO.createItem(title);
+    pubsub.publish(ITEM_ADDED, { itemAdded: item }); // dispatch an event
+    return item;
+  }
+};
+```
+
+Subscriptions depend on use of a publish and subscribe primitive to generate the events that notify a subscription. `PubSub` is a factory that creates event generators that is provided by all supported packages. 
 
 ## Debug
 
