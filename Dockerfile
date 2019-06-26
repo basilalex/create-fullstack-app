@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN npm i -g lerna knex yarn
+RUN npm i -g lerna knex yarn pm2
 RUN yarn
 RUN yarn migrate
 RUN yarn build

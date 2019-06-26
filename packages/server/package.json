@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode development --progress --watch",
     "build": "webpack --config webpack.config.js --progress",
-    "serve": "node build/server.js",
+    "serve": "pm2 start -i 0 build/server.js",
     "migrate": "npx knex migrate:latest --env production --knexfile ./knexfile.js"
   },
   "dependencies": {
