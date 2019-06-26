@@ -1,14 +1,4 @@
-import { pipe } from './utils';
-import { createProviders } from './providers';
-import { getRoutes } from './routes';
-import { renderApp } from './root';
-import { configureSW } from './SW';
+import { createApp } from './app';
+import modules from './molules';
 
-const startApp = pipe(
-  createProviders,
-  getRoutes,
-  renderApp,
-  configureSW
-);
-
-startApp({});
+createApp(modules);

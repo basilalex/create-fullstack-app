@@ -1,4 +1,4 @@
-const featureConfig = {
+export const featureConfig = {
   features: {
     // notifications: [ "'self'" ],
     magnetometer: [ "'self'" ],
@@ -15,5 +15,3 @@ const featureConfig = {
     midi: [ "'none'" ]
   },
 };
-
-export const getFeatureConfig = appCtx => ({ ...appCtx, featureConfig });

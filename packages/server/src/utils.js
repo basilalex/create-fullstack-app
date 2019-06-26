@@ -1,6 +1,7 @@
+export const mergeResolvers = (...args) => {
+  const Query = args.reduce((acc, { query }) => query ? ({ ...acc, ...query }) : acc, {});
+  const Mutation = args.reduce((acc, { mutation }) => mutation ? ({ ...acc, ...mutation }) : acc, {});
+  const Subscription = args.reduce((acc, { subscription }) => subscription ? ({ ...acc, ...subscription }) : acc, {});
 
-import path from 'path';
-import dotenv from 'dotenv';
-
-export const pipe = (...fns) => arg => fns.reduce((v, fn) => fn(v), arg);
-export const getEnv = () => dotenv.config({ path: path.join(process.cwd() + '/.env')}).parsed;
+  return { Query, Mutation, Subscription };
+};

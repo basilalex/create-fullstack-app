@@ -11,17 +11,18 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "apollo-boost": "^0.3.1",
-    "apollo-link": "^1.2.11",
-    "apollo-link-ws": "^1.0.17",
-    "graphql": "^14.2.1",
+    "apollo-link": "^1.2.12",
+    "apollo-link-ws": "^1.0.18",
+    "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
     "history": "^4.9.0",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.3",
+    "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1",
+    "redux": "^4.0.1",
     "subscriptions-transport-ws": "^0.9.16"
   },
   "eslintConfig": {

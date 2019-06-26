@@ -1,5 +1,5 @@
-import { Query } from './Query';
-import { Mutation } from './Mutation';
-import { Subscription } from './subscription';
+import sample from './sample';
+import { mergeResolvers } from '../utils';
 
-export const getResolvers = appCtx => ({ ...appCtx, resolvers: { Query, Mutation, Subscription }});
+export * from './pubSub';
+export default mergeResolvers(sample);

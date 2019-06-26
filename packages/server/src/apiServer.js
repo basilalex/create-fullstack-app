@@ -3,18 +3,21 @@ import cors from 'cors';
 import helmet from 'helmet';
 import express from 'express';
 import { createServer } from 'http';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, gql } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import typeDefs from './schema.graphql';
+import { env } from './env';
+import { models } from './models';
+import resolvers from './resolvers';
+import { cspConfig, featureConfig } from './config';
 
-export const createApiServer = appCtx => {
-  const { cspConfig, featureConfig, resolvers, DAO, env: { WEBSITE_URL, PORT }} = appCtx;
+export const createApiServer = () => {
   const app = express();
   const apolloServer = new ApolloServer({
-    typeDefs,
+    typeDefs: gql(typeDefs),
     resolvers,
     subscriptions: '/subscriptions',
-    context: ({ req }) => ({ ...req, DAO })
+    context: ({ req }) => ({ ...req, ...models })
   });
 
   app.use(helmet());
@@ -28,13 +31,13 @@ export const createApiServer = appCtx => {
 
   app.use(cors({
     credentials: true,
-    origin: WEBSITE_URL,
+    origin: env.WEBSITE_URL,
     optionsSuccessStatus: 200,
     methods: 'GET,POST',
   }));
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(process.cwd(), '../client/build')));    
+    app.use(express.static(path.join(process.cwd(), '../client/build')));
   }
 
   apolloServer.applyMiddleware({ app, path: '/graphql' });
@@ -49,10 +52,10 @@ export const createApiServer = appCtx => {
   const ws = createServer(app);
   apolloServer.installSubscriptionHandlers(ws);
 
-  ws.listen(PORT || 8080, () => {
-    console.log(`🚀 Server ready at http://localhost:${PORT || 8080}${apolloServer.graphqlPath}`)
-    console.log(`🚀 Subscriptions ready at ws://localhost:${PORT || 8080}${apolloServer.subscriptionsPath}`)
+  return ws.listen(env.PORT || 8080, () => {
+    console.log(`🚀 Server ready at http://localhost:${env.PORT || 8080}${apolloServer.graphqlPath}`)
+    console.log(`🚀 Subscriptions ready at ws://localhost:${env.PORT || 8080}${apolloServer.subscriptionsPath}`)
   });
-
-  return { ...appCtx, app, ws };
 };
+
+export default createApiServer;

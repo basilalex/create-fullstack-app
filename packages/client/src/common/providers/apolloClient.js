@@ -10,19 +10,16 @@ const isSubscription = ({ query }) => {
   return kind === 'OperationDefinition' && operation === 'subscription';
 };
 
-export const createApolloClient = appCtx => {
-  const cache = new InMemoryCache();
-  const httpLink = new HttpLink({ uri: process.env.REACT_APP_API_URL });
+const cache = new InMemoryCache();
+export const httpLink = new HttpLink({ uri: process.env.REACT_APP_API_URL });
 
-  const wsLink = new WebSocketLink({
-    uri: process.env.REACT_APP_SUBSCRIPTION_URL,
-    options: {
-      reconnect: true
-    }
-  });
+export const wsLink = new WebSocketLink({
+  uri: process.env.REACT_APP_SUBSCRIPTION_URL,
+  options: {
+    reconnect: true
+  },
+});
 
-  const link = split(isSubscription, wsLink, httpLink);
-  const apolloClient = new ApolloClient({ link, cache });
+export const link = split(isSubscription, wsLink, httpLink);
 
-  return { ...appCtx, apolloClient }
-};
+export const apolloClient = new ApolloClient({ link, cache });
