@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import { Router, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { apolloClient, history } from '../common';
+import { apolloClient, history } from '../global';
 import { createStore, combineReducers, compose } from 'redux';
 
 const Root = ({ store, routes }) => (
