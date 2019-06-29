@@ -1,5 +1,5 @@
 import { camelizeKeys } from 'humps';
-import { db } from '../config';
+import { db } from '../../global';
 
 export const Item = {
   async queryItem(id) {
@@ -13,3 +13,5 @@ export const Item = {
     return this.queryItem(id);
   }
 };
+
+export default Item;

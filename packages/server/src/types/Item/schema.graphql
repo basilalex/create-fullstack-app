@@ -3,7 +3,6 @@ scalar Date
 type Item {
   id: Int!
   title: String!
-  description: String!
   createdAt: Date
   updatedAt: Date
 }
